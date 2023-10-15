@@ -13,7 +13,6 @@ params = { #params vs headers
     'apikey' : os.environ.get('CURRENCY_API_KEY')
 }
 
-
 def fetch_rates():
     '''
     Fetches the current rates from API in the form of USDXXX
@@ -25,15 +24,10 @@ def fetch_rates():
     data = response.json()
     
     prices = {} #CountryCode:value
-    for term, term_data in data['data'].items(): 
+    for term, term_rate in data['data'].items(): 
         if term in TERMPAIRS:
-            prices[term] = term_data['value']
-    print(prices)
-    
-    
-    
-
-    
+            prices[term] = term_rate['value']
+        return prices
+ 
 if __name__ == '__main__':
     fetch_rates()
-    
