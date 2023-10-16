@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
     Box,
 } from '@mui/material';
@@ -6,6 +6,10 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import exampleData from './exampleData.json';
 
 export default function TimelineGraph({ data }) {
+
+    useEffect(() => {
+        console.log("from TimelineGraph " + data.method);
+    }, [data]);
 
     const getRates = () => {
         const historicalData = exampleData.histoticalData;

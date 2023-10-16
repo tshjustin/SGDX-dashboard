@@ -9,7 +9,7 @@ export default function App() {
     // Every time the ccyPair changes, 
     // send a request to the backend to retieve the rates for that ccyPair
     useEffect(() => {
-        fetch("http://localhost:9000") // sample backend endpoint
+        fetch("https://httpbin.org/anything") // sample backend endpoint
         .then(response => response.json())
         .then(data => setData(data))
     }, [ccyPair]);
