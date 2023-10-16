@@ -5,7 +5,7 @@ import {
 import { LineChart } from '@mui/x-charts/LineChart';
 import exampleData from './exampleData.json';
 
-export default function TimelineGraph() {
+export default function TimelineGraph({ data }) {
 
     const getRates = () => {
         const historicalData = exampleData.histoticalData;
