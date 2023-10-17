@@ -1,7 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from datetime import datetime
 import os 
-import ssl 
 
 client = MongoClient(os.environ.get('MONGO_URL_KEY'))
 database = client['SGDX']
@@ -26,15 +25,31 @@ def insert_rates(prices):
         entry['rates'] = rates 
         entry['time_inserted'] = datetime.now()
         database[current_collection_name].insert_one(entry) 
-    #print('added')
 
 def get_term_rates(term):
     '''
-    Selects a specific rate from the database 
+    Gets the latest rate of a specific term 
+    
+    Since rates are queried at 12pm everyday, we would need to get the rates of the closest date 
     '''
-    pass 
+    term_rates_name = collection_name(term)
+    most_recent_record = next(database[term_rates_name].find().sort("time_inserted",-1).limit(1)) #finds the latest record in a collection - next() is a pointer
+    return most_recent_record['rates']
+    
+def get_past_term_rates(duration,term):
+    '''
+    Gets a list of past rates (including current rates) for a specific current term rate
+    
+    rtype: list of past rates 
+    ''' 
+    term_rates_name = collection_name(term)
+    cursor = database[term_rates_name].find().sort("time_inserted",-1).limit(duration)
+    most_recent_records = list(cursor) #Note the cursor 
+    return most_recent_records['rates']
+    
 
 def delete_rates():
     '''
     Deletes rates that are over a week old
     '''
+    pass 
