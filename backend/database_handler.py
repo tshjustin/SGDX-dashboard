@@ -26,6 +26,13 @@ def insert_rates(prices):
         entry['rates'] = rates 
         entry['time_inserted'] = datetime.now()
         database[current_collection_name].insert_one(entry) 
+    #print('added')
+
+def get_term_rates(term):
+    '''
+    Selects a specific rate from the database 
+    '''
+    pass 
 
 def delete_rates():
     '''
