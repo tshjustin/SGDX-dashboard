@@ -1,11 +1,11 @@
 from pymongo.mongo_client import MongoClient
-from dotenv import load_dotenv, find_dotenv
+from datetime import datetime
 import os 
-
-load_dotenv(find_dotenv)
+import ssl 
 
 client = MongoClient(os.environ.get('MONGO_URL_KEY'))
 database = client['SGDX']
+
 
 #Each collection would hold a currency-pair: Name of each collection is term_rates
 
@@ -19,8 +19,15 @@ def insert_rates(prices):
     '''
     Inserts rates from API call into the respective collections
     
-    #Needs to include current Datetime, but will be done in main! 
     '''
     for term,rates in prices.items():
         current_collection_name = collection_name(term)
-        database[current_collection_name].insertOne(rates)
+        entry = {}
+        entry['rates'] = rates 
+        entry['time_inserted'] = datetime.now()
+        database[current_collection_name].insert_one(entry) 
+
+def delete_rates():
+    '''
+    Deletes rates that are over a week old
+    '''
