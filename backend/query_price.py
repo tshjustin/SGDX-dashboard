@@ -1,8 +1,10 @@
-import os 
 import requests #Allows sending of HTTP requests to URL 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 from database_handler import insert_rates
+from utils import * 
+import os 
+from database_handler import * 
     
 URL = 'https://api.currencyapi.com/v3/latest'
 
@@ -32,6 +34,8 @@ def fetch_rates():
     return prices
 
 if __name__ == '__main__':
-    prices = fetch_rates()
-    insert_rates(prices)
-    #print(prices)
+    # prices = fetch_rates()
+    # new = converter(prices)
+    # insert_rates(new)
+    get_past_term_rates(3,'JPY')
+
