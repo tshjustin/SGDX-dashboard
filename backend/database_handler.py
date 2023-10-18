@@ -1,5 +1,5 @@
 from pymongo.mongo_client import MongoClient
-from datetime import datetime
+from datetime import datetime, timedelta
 import os 
 
 client = MongoClient(os.environ.get('MONGO_URL_KEY'))
@@ -48,8 +48,12 @@ def get_past_term_rates(duration,term):
     return most_recent_records['rates']
     
 
-def delete_rates():
+def delete_old_rates(prices):
     '''
-    Deletes rates that are over a week old
+    Deletes rates from the MongoDB that are 60 days old or older.
     '''
-    pass 
+    # Calculate the date threshold: current date - 60 days
+    threshold_date = datetime.now() - timedelta(days=60)
+    for term in prices.keys():
+        current_collection_name = collection_name(term)
+        database[current_collection_name].delete_many({'time_inserted': {'$lt': threshold_date}})
