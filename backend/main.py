@@ -1,4 +1,4 @@
-from flask import Flask 
+from fastapi import FastAPI 
 from query_price import fetch_rates
 from utils import * 
 from database_handler import * 
@@ -6,10 +6,9 @@ import asyncio
 import datetime
 import pytz
 
-app = Flask(__name__) 
+app = FastAPI() 
 
 PREV_QUERY = 0
-
 
 async def query_interval():
     '''
@@ -35,6 +34,7 @@ async def query_interval():
             new_usd_rates = await fetch_rates()
             new_sgd_based_rates = converter(new_usd_rates)
             insert_rates(new_sgd_based_rates)
+            delete_old_rates(new_sgd_based_rates)
             PREV_QUERY = int(now.timestamp())
 
             # Sleep for a short while before calculating the next 12pm
@@ -42,3 +42,11 @@ async def query_interval():
         else:
             # Sleep until the next 12pm
             await asyncio.sleep(sleep_duration)
+
+@app.on_event('startup')
+def background_query():
+    pass 
+       
+if __name__ == "_main__":
+    uvicorn
+    
