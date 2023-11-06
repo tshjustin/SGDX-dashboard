@@ -18,6 +18,13 @@ def sgd_to_term(sgd_rate,term_rate):
     '''
     oneSGD_to_oneTerm = term_rate * sgd_rate
     return oneSGD_to_oneTerm
+
+def term_to_sgd(sgd_rate,term_rate):
+    '''
+    Converts term currency from (1XXX -> 1 SGD) 
+    '''
+    
+    pass
     
 def converter(USD_base_rates):
     '''
@@ -34,10 +41,5 @@ def converter(USD_base_rates):
     return sgd_based_rates
             
     
-def term_to_sgd(sgd_rate,term_rate):
-    '''
-    Converts all currency from 1 Term to 1 SGD 
-    '''
-    pass
-    
+
     
