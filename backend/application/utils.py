@@ -1,11 +1,12 @@
 def get_sgd_rates(USD_base_rates): 
     '''
-    Returns the rate of 1 SGD to 1 USD 
+    Rates from API based in USD. SGD Rates inferred from its USD base. 
+    
+    Returns 1 sgd: base usd 
     '''
-    oneUSD_to_oneSGD = USD_base_rates.get("SGD")
-    oneSGD_to_oneUSD = float(1 / oneUSD_to_oneSGD)
-    return oneSGD_to_oneUSD
-
+    oneUSD_to_SGD = USD_base_rates.get("SGD")
+    return float(1 / oneUSD_to_SGD)
+     
 def sgd_to_term(sgd_rate,term_rate): 
     '''
     Converts term currency from (1 USD -> Term) to (1 SGD -> Term)
@@ -14,18 +15,10 @@ def sgd_to_term(sgd_rate,term_rate):
     
     1 SGD = 0.7XX USD
             1 USD = YY
-    so, 1 SGD -> 0.7XX(YY)
     '''
     oneSGD_to_oneTerm = term_rate * sgd_rate
     return oneSGD_to_oneTerm
 
-def term_to_sgd(sgd_rate,term_rate):
-    '''
-    Converts term currency from (1XXX -> 1 SGD) 
-    '''
-    
-    pass
-    
 def converter(USD_base_rates):
     '''
     Converts all queried data from API from USDXXX to SGDXXX 
@@ -39,7 +32,4 @@ def converter(USD_base_rates):
         if term != 'SGD':
             sgd_based_rates[term] = sgd_to_term(sgd_usd_rate,rates)
     return sgd_based_rates
-            
-    
 
-    
