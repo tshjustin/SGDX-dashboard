@@ -1,16 +1,21 @@
-from flask import Flask
+from flask import Flask, jsonify
 import schedule
 import threading
 import logging
 import time
 from query_price import fetch_rates
 from database_handler import dbm
-from utils import converter  # Assuming the converter function is defined in utils
-from settings import QUERY_INTERVAL_SECONDS
+from utils import converter  
+from settings import QUERY_INTERVAL_HOUR
+
+app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
 
-def run_continuously(interval=10):
+def run_continuously(interval=6*60*60): 
+    '''
+    interval: sets default time in seconds to check and run pending task 
+    '''
     cease_continuous_run = threading.Event()
 
     class ScheduleThread(threading.Thread):
@@ -37,19 +42,28 @@ def initialize_cron():
     '''
     Initializes CronJob 
     '''
-    schedule.every(QUERY_INTERVAL_SECONDS).seconds.do(periodic_query)  
+    schedule.every(QUERY_INTERVAL_HOUR).hours.do(periodic_query)  
     stop_run_continuously = run_continuously()
     logger.info("Cron initialized!")
 
 def init_app():
     '''
-    Initializes Flask App 
+    Initializes Database & cron 
     '''
-    app = Flask(__name__, instance_relative_config=False)
     dbm.setup()
     initialize_cron()
     return app
 
+@app.route('/')
+def ping():
+    return 'Root - For pinging purposes'
+
+@app.route('/rates/<term>')
+def term_base(term):
+    rates = dbm.get_term_rates(term)
+    print(f'SGD to {term} Rates:', rates) 
+    return jsonify({term: rates})
+
 if __name__ == "__main__":
     app = init_app()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=False)

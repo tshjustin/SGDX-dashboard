@@ -26,7 +26,3 @@ def fetch_rates():
         if term in BASE_TERM_PAIRS:
             prices[term] = term_rate['value']
     return prices
-
-
-if __name__ == "__main__":
-    a = fetch_rates()
