@@ -1,4 +1,4 @@
 ﻿# SGDX-dashboard
 
 
-LEFT THE FUCKING ENDPOINTS
+ -- 
