@@ -1,5 +1,5 @@
 import requests 
-from utils import * 
+from backend.converter.utils import * 
 from settings import API_URL, API_KEY
 
 BASE_TERM_PAIRS = ["BND","CNY","HKD","IDR",
@@ -26,3 +26,9 @@ def fetch_rates():
         if term in BASE_TERM_PAIRS:
             prices[term] = term_rate['value']
     return prices
+
+def periodic_query(time): 
+    '''
+    Queries Endpoint every period 
+    
+    '''
