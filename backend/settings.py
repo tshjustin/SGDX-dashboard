@@ -16,6 +16,4 @@ API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('CURRENCY_API_KEY')
 
 # Constants 
-QUERY_INTERVAL_HOUR = 6 
-
-QUERY_INTERVAL_SECONDS = 10 
+QUERY_INTERVAL_MINUTES= 10 

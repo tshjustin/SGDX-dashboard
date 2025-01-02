@@ -1,15 +1,12 @@
 import requests 
-from backend.converter.utils import * 
-from settings import API_URL, API_KEY
+from backend.settings import API_URL, API_KEY
 
 BASE_TERM_PAIRS = ["BND","CNY","HKD","IDR",
                    "INR","JPY","KRW","LKR",
                    "MYR", "PHP", "SGD","THB",
                    "VND"]
 
-params = {
-    'apikey' : API_KEY
-}
+complete_url = f"{API_URL}?api_key={API_KEY}"
 
 def fetch_rates():
     '''
@@ -18,13 +15,13 @@ def fetch_rates():
     :return: JSON of rates 
     :rtype: Dictionary - With key:value pairs of base:value
     '''
-    response = requests.get(API_URL, params=params)
+    response = requests.get(complete_url)
     data = response.json()
     
     prices = {} # CountryCode: value
-    for term, term_rate in data['data'].items(): 
+    for term, term_rate in data['rates'].items():
         if term in BASE_TERM_PAIRS:
-            prices[term] = term_rate['value']
+            prices[term] = term_rate
     return prices
 
 def periodic_query(time): 
@@ -32,3 +29,7 @@ def periodic_query(time):
     Queries Endpoint every period 
     
     '''
+
+
+if __name__ == "__main__":
+    print(fetch_rates())
