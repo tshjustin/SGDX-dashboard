@@ -1,4 +1,5 @@
 import requests 
+from typing import Dict 
 from backend.settings import API_URL, API_KEY
 
 BASE_TERM_PAIRS = ["BND","CNY","HKD","IDR",
@@ -8,13 +9,14 @@ BASE_TERM_PAIRS = ["BND","CNY","HKD","IDR",
 
 complete_url = f"{API_URL}?api_key={API_KEY}"
 
-def fetch_rates():
-    '''
-    Fetches the current rates from API in the form of USDXXX 
-    
-    :return: JSON of rates 
-    :rtype: Dictionary - With key:value pairs of base:value
-    '''
+def fetch_rates() -> Dict:
+    """
+    Queries API for base:term pairs 
+
+    Returns:
+        dict: Dictionary of term-base pairs 
+
+    """
     response = requests.get(complete_url)
     data = response.json()
     
@@ -24,12 +26,4 @@ def fetch_rates():
             prices[term] = term_rate
     return prices
 
-def periodic_query(time): 
-    '''
-    Queries Endpoint every period 
-    
-    '''
-
-
-if __name__ == "__main__":
-    print(fetch_rates())
+# prices = {"SGD": 1.34, "MYR": 3.22, ...}
