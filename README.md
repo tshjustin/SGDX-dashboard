@@ -6,11 +6,11 @@ An exchange rate platform to query about different real time rates relative to S
 ### Requirements 
 
 #### Functional Requirements
-1. Query rates every hour 
+1. Query rates every hour  ✅
 - OK! 
 - Need to consider DB space. How long are we storing the data for? Need to consider if the free DB that we are using can accomodate so much data.
 
-2. Convert rates to SGD base
+2. Convert rates to SGD base ✅
 - Hard to convert to SGD base. For example if we are scraping USDMYR, and to convert to USDSGD, we need the MYRSGD exchange rate to caculate. But which MYRSGD rate to use? - Not possible to find a suitable rate.
 
 3. Visuals to see how rate changes per time, time = {day, {1,2...12} months, years}

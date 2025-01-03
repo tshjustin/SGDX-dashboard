@@ -1,35 +1,24 @@
-import time 
-import schedule 
-from flask import Flask 
-from scraper.query_price import fetch_rates
-from conversion.convert_rates import convert_rates_to_sgd_base
+from flask import Flask
+from threading import Thread
+from backend.mongodb.mongodb import * 
+from backend.scheduler import periodic_query, periodic_delete, run_scheduler 
+from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS, QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
 
-app = Flask(__name__) 
+app = Flask(__name__)
+
+mongo_client = MongoClient(MONGO_CONNECTION)
+rates_db = mongo_client.get_database("SGDX_Rates")
+create_schema(rates_db, BASE_TERM_PAIRS)
 
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 
-# flask --app main run
-def query_store() -> None:
-    prices = fetch_rates()
-    sgd_base_prices = convert_rates_to_sgd_base(prices)
+if __name__ == "__main__":
+    scheduler_thread = Thread(target=run_scheduler)  # non-blocking of main app
+    scheduler_thread.start()
 
-    # store data 
-
-def periodic_query(interval: int) -> None: 
-    """
-    Queries the endpoint after {time} interval 
-
-    Arguments: 
-        interval: Time interval in minutes for each query 
-    """
-    schedule.every(interval).minutes.do(fetch_rates)
-
-def run_scheduler() -> None:
-    """
-    Continuously run the scheduler and checks for executed jobs 
-    """
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    periodic_query(QUERY_INTERVAL_MINUTES)   
+    periodic_delete(DELETE_INTERVAL_MINUTES)  
+    
+    app.run(debug=True)
