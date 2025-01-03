@@ -15,22 +15,15 @@ def fetch_rates() -> Dict:
     Returns:
         dict: Dictionary of term-base pairs 
     """
-    try:
-        response = requests.get(complete_url)
-        response.raise_for_status() 
-        
-        data = response.json()
-        prices = {}  # CountryCode: value
-        
-        for term, term_rate in data['rates'].items():
-            if term in BASE_TERM_PAIRS:
-                prices[term] = term_rate
-        
-        logger.info("Query successful")
-        return prices
+    response = requests.get(complete_url)
+    data = response.json()
+    prices = {}  # CountryCode: value
     
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Query failed, {e}")
-        return {}
-
+    for term, term_rate in data['rates'].items():
+        if term in BASE_TERM_PAIRS:
+            prices[term] = term_rate
+    
+    logger.info("Query successful")
+    return prices
+    
 # prices = {"SGD": 1.34, "MYR": 3.22, ...}

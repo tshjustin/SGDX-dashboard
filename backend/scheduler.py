@@ -10,21 +10,9 @@ rates_db = mongo_client.get_database("SGDX_Rates")
 create_schema(rates_db, BASE_TERM_PAIRS)
 
 def periodic_delete(rates_db, interval: int = 1440) -> None:
-    """
-    Schedules the deletion of old records at the specified time interval.
-    
-    Arguments:
-        interval: Time interval in minutes for each deletion task.
-    """
-    schedule.every(interval).minutes.do(delete_records)
+    schedule.every(interval).minutes.do(lambda: delete_records(rates_db)) # for the sake of argument passing 
 
 def periodic_query(interval: int) -> None:
-    """
-    Queries the endpoint after {time} interval.
-    
-    Arguments:
-        interval: Time interval in minutes for each query.
-    """
     schedule.every(interval).minutes.do(query_store)
 
 def run_scheduler() -> None:
@@ -38,4 +26,4 @@ def query_store() -> None:
     """
     prices = fetch_rates()
     sgd_base_prices = convert_rates_to_sgd_base(prices)
-    insert_records(rates_db, sgd_base_prices)
+    insert_records(rates_db, sgd_base_prices) # else we can do as such to pass the arugments in 

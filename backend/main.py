@@ -1,7 +1,7 @@
 from flask import Flask
 from threading import Thread
 from backend.scheduler import periodic_query, periodic_delete, run_scheduler 
-from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS, QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
+from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
 
 app = Flask(__name__)
 

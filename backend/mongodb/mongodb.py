@@ -1,4 +1,4 @@
-import logging 
+import pytz
 from typing import Dict, List 
 from datetime import datetime, timedelta
 from pymongo import MongoClient, ASCENDING
@@ -32,32 +32,34 @@ def insert_records(rates_db: MongoClient, prices: Dict[str, float]) -> None:
         rates_db: MongoDB database instance
         prices: Dictionary of prices in terms of SGD Base
     """
-    timestamp = datetime.now().strftime("%Y%m%d")
+    utc_time = datetime.now(pytz.utc)
+    
     for currency, rate in prices.items():
-        rates_db[currency].update_one(
-            {"timestamp": timestamp},
-            {"$set": {"rate": rate, "timestamp": timestamp}},
-            upsert=True
-        )
+        record = {
+            "rate": rate,
+            "utc_time": utc_time.isoformat()  
+        }
+        rates_db[currency].insert_one(record)
 
 def delete_records(rates_db: MongoClient, days: int = 60) -> None:
     """
-    Delete records that are older than the specified number of days.
+    Delete records that are older than the specified number of days and minutes.
     
     Parameters:
         rates_db: MongoDB database instance.
         days: Number of days to retain records.
     """
-    cutoff_date = (datetime.now() - timedelta(days=days)).strftime("%Y%m%d")
+    cutoff_time = datetime.now(pytz.utc) - timedelta(days=days)  # Get the UTC time cutoff
+    cutoff_timestamp = cutoff_time.isoformat() 
+    
     for collection_name in rates_db.list_collection_names():
-        rates_db[collection_name].delete_many({"timestamp": {"$lt": cutoff_date}})
+        rates_db[collection_name].delete_many({"utc_time": {"$lt": cutoff_timestamp}})
 
 def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Dict[str, Dict[str, float]]:
     """
-    Fetches records based on the type of currency and the requested time period.
+    Fetches records based on the type of currency and the requested time period in days 
     
     Parameters:
-        rates_db: MongoDB database instance
         currency: List of strings of wanted currency
         period: Time period in days to fetch records for
 
