@@ -2,7 +2,7 @@ import time
 import schedule 
 from flask import Flask 
 from scraper.query_price import fetch_rates
-from conversion.convert_rates import sgd_to_term
+from conversion.convert_rates import convert_rates_to_sgd_base
 
 app = Flask(__name__) 
 
@@ -13,8 +13,7 @@ def hello_world():
 # flask --app main run
 def query_store() -> None:
     prices = fetch_rates()
-
-    # COnvert to sgd base 
+    sgd_base_prices = convert_rates_to_sgd_base(prices)
 
     # store data 
 

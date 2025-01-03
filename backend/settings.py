@@ -8,7 +8,7 @@ load_dotenv(find_dotenv())
 logging.basicConfig(level=logging.DEBUG) 
 
 # Database 
-MONGODB_KEY = os.environ.get('MONGO_URL_KEY')
+MONGO_CONNECTION = os.environ.get('MONGO_CONNECTION')
 
 # External APIs 
 API_URL = os.environ.get('API_URL')
