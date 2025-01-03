@@ -39,7 +39,6 @@ def insert_records(rates_db: MongoClient, prices: Dict[str, float]) -> None:
             {"$set": {"rate": rate, "timestamp": timestamp}},
             upsert=True
         )
-    logging.info("Added rates")
 
 def delete_records(rates_db: MongoClient, days: int = 60) -> None:
     """

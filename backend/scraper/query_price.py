@@ -5,23 +5,32 @@ from backend.settings import API_URL, API_KEY, BASE_TERM_PAIRS # python -m scrap
 
 complete_url = f"{API_URL}?api_key={API_KEY}"
 
+logging.basicConfig(level=logging.INFO) 
+logger = logging.getLogger(__name__)
+
 def fetch_rates() -> Dict:
     """
     Queries API for base:term pairs 
 
     Returns:
         dict: Dictionary of term-base pairs 
-
     """
-    response = requests.get(complete_url)
-    data = response.json()
+    try:
+        response = requests.get(complete_url)
+        response.raise_for_status() 
+        
+        data = response.json()
+        prices = {}  # CountryCode: value
+        
+        for term, term_rate in data['rates'].items():
+            if term in BASE_TERM_PAIRS:
+                prices[term] = term_rate
+        
+        logger.info("Query successful")
+        return prices
     
-    prices = {} # CountryCode: value
-    for term, term_rate in data['rates'].items():
-        if term in BASE_TERM_PAIRS:
-            prices[term] = term_rate
-
-    logging.info("Query Successful")
-    return prices
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Query failed, {e}")
+        return {}
 
 # prices = {"SGD": 1.34, "MYR": 3.22, ...}

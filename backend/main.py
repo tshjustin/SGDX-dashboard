@@ -1,14 +1,9 @@
 from flask import Flask
 from threading import Thread
-from backend.mongodb.mongodb import * 
 from backend.scheduler import periodic_query, periodic_delete, run_scheduler 
 from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS, QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
 
 app = Flask(__name__)
-
-mongo_client = MongoClient(MONGO_CONNECTION)
-rates_db = mongo_client.get_database("SGDX_Rates")
-create_schema(rates_db, BASE_TERM_PAIRS)
 
 @app.route("/")
 def hello_world():
