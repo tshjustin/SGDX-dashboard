@@ -6,8 +6,12 @@ from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def ping():
+    return ""
+
+@app.route("/get/<time>")
+def rate_interval(time):
+    return time 
 
 if __name__ == "__main__":
     scheduler_thread = Thread(target=run_scheduler)  # non-blocking of main app
