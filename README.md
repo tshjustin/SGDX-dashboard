@@ -16,6 +16,10 @@ An exchange rate platform to query about different real time rates relative to S
 3. Visuals to see how rate changes per time, time = {day, {1,2...12} months, years}
 - Possible! If rates are better compared to the previous week or something then we can highlight the rate green? And highlight the rate red vice-versa
 
+4. Allows for switch currency, SGD-> XXX, XXX-> SGD 
+
+5. Currency of other bases. Eg: MYR -> USD 
+
 #### Non Functional Requirements 
 1. Scalability -> More currency from different sources 
 - I think possible? Can incorporate multi-threading.
@@ -27,6 +31,6 @@ An exchange rate platform to query about different real time rates relative to S
 - Possible! Perhaps alert through email / SMS when significant drop
 
 ### To-do
-1. Verify Periodic Queries and check if updates to DB are successful 
+1. Verify Periodic Queries and check if updates to DB are successful ✅
 
 2. Set up endpoints 
