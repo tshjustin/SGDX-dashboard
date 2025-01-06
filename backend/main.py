@@ -35,4 +35,4 @@ if __name__ == "__main__":
     periodic_query(QUERY_INTERVAL_MINUTES)   
     periodic_delete(rates_db, DELETE_INTERVAL_MINUTES)  
     
-    app.run(debug=True)
+    app.run(debug=False)

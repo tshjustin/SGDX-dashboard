@@ -8,6 +8,7 @@ def periodic_delete(rates_db: MongoClient, interval: int) -> None:
     schedule.every(interval).minutes.do(lambda: delete_records(rates_db)) # for the sake of argument passing 
 
 def periodic_query(interval: int) -> None:
+    print("Running")
     schedule.every(interval).minutes.do(query_store)
 
 def run_scheduler() -> None:
