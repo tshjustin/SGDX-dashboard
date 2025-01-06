@@ -14,14 +14,18 @@ def ping():
 @app.route("/get/<base>/<time>")
 def rate_interval(base: str, time: int) -> Dict:
     """
-    Endpoint to fetch a specific base-term pair and time period
+    returns a payload of 
+
+    {
+    "base": {time: datetime, rate: float}
+    }
     
     Parameters:
         base: The base currency.
         time: The time period in days
 
     Returns:
-        JSON response containing the fetched rates.
+        JSON response containing the fetched rates
     """
     base = base.upper()
     period = int(time)
@@ -36,4 +40,4 @@ if __name__ == "__main__":
     periodic_query(QUERY_INTERVAL_MINUTES)   
     periodic_delete(rates_db, DELETE_INTERVAL_MINUTES)  
     
-    app.run(debug=False)
+    app.run(debug=False) # Stops parent thread from running that causes 2 runs 
