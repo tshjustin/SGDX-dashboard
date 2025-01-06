@@ -23,6 +23,7 @@ def rate_interval(base: str, time: int) -> Dict:
     Returns:
         JSON response containing the fetched rates.
     """
+    base = base.upper()
     period = int(time)
     rates = fetch_records(rates_db, [base], period)
 

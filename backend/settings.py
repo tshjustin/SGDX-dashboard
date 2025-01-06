@@ -5,7 +5,7 @@ import logging
 load_dotenv(find_dotenv())
 
 # Logger 
-logging.basicConfig(level=logging.DEBUG) 
+logging.basicConfig(level=logging.INFO) 
 
 # Database 
 MONGO_CONNECTION = os.environ.get('MONGO_CONNECTION')

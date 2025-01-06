@@ -22,6 +22,8 @@ def create_schema(rates_db: MongoClient, currencies: List[str]) -> None:
 def insert_records(rates_db: MongoClient, prices: Dict[str, float]) -> None:
     """
     Insert SGD_base: Term_rates into the relevant currency collections
+
+    Schema: { rates: float, timestamp: datetime}
     
     Parameters:
         rates_db: MongoDB database instance
@@ -32,7 +34,7 @@ def insert_records(rates_db: MongoClient, prices: Dict[str, float]) -> None:
     for currency, rate in prices.items():
         record = {
             "rate": rate,
-            "timestamp": utc_time.isoformat()  
+            "timestamp": utc_time 
         }
         rates_db[currency].insert_one(record)
 
@@ -45,33 +47,22 @@ def delete_records(rates_db: MongoClient, days: int = 60) -> None:
         days: Number of days to retain records.
     """
     cutoff_time = datetime.now(pytz.utc) - timedelta(days=days)  # Get the UTC time cutoff
-    cutoff_timestamp = cutoff_time.isoformat() 
-    
+
     for collection_name in rates_db.list_collection_names():
-        rates_db[collection_name].delete_many({"timestamp": {"$lt": cutoff_timestamp}})
+        rates_db[collection_name].delete_many({"timestamp": {"$lt": cutoff_time}})
 
 def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Dict[str, Dict[str, float]]:
     """
-    Fetches records based on the type of currency and the requested time period in days
-    
-    Parameters:
-        rates_db: MongoDB database instance
-        currency: List of strings of wanted currency
-        period: Time period in days to fetch records for
-
-    Return:
-        Dictionary of currency: {time: rates}
+    Fetches records for the last `period` days.
     """
-    # cut off date-time 
     cutoff_datetime = datetime.now(pytz.utc) - timedelta(days=period)
     
     currencies = {}
     for curr in currency:
-        
+
         records = rates_db[curr].find({"timestamp": {"$gte": cutoff_datetime}})
-        
         currencies[curr] = {
-            record["timestamp"]: record["rate"] for record in records
+            str(record["timestamp"]): record["rate"] for record in records
         }
     
     return currencies
