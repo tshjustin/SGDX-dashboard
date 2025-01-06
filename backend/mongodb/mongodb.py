@@ -2,6 +2,10 @@ import pytz
 from typing import Dict, List 
 from datetime import datetime, timedelta
 from pymongo import MongoClient, ASCENDING
+from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS
+
+mongo_client = MongoClient(MONGO_CONNECTION)
+rates_db = mongo_client.get_database("SGDX_Rates")
 
 def create_schema(rates_db: MongoClient, currencies: List[str]) -> None:
     """
@@ -72,6 +76,8 @@ def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Di
     
     return currencies
 
+create_schema(rates_db, BASE_TERM_PAIRS)
+
 # Returns a payload of the form: 
 # {
 #     "USD": {
@@ -80,7 +86,7 @@ def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Di
 #         "20250103": 1.37,
 #         ...
 #     },
-#     "EUR": {
+#     "MYR": {
 #         "20250101": 1.15,
 #         "20250102": 1.16,
 #         "20250103": 1.17,
