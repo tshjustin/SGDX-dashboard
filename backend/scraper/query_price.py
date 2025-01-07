@@ -1,4 +1,3 @@
-import logging 
 import requests 
 from typing import Dict 
 from backend.settings import API_URL, API_KEY, BASE_TERM_PAIRS, logger # python -m scraper.query_price resolves relative imports. Run module name, not module path (with .py)

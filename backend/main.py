@@ -5,8 +5,8 @@ from threading import Thread
 from datetime import datetime
 from flask import Flask, jsonify
 from backend.mongodb.mongodb import rates_db, fetch_records
-from backend.scheduler import periodic_query, periodic_delete, run_scheduler, query_store
 from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES, logger 
+from backend.scheduler import periodic_query, periodic_delete, run_scheduler, query_store
 
 # Global variables for monitoring
 scheduler_start_time = None
@@ -45,6 +45,7 @@ def create_app():
         # Check if we can access the API
         from backend.scraper.query_price import complete_url
         import requests
+
         try:
             response = requests.head(complete_url)
             api_status = "accessible" if response.status_code == 200 else f"error: {response.status_code}"
@@ -60,15 +61,6 @@ def create_app():
             "api_status": api_status,
             "worker_id": os.environ.get('GUNICORN_WORKER_ID', 'unknown')
         })
-
-    @app.route("/force-query")
-    def force_query():
-        try:
-            query_store()
-            return jsonify({"status": "success", "message": "Query executed successfully"})
-        except Exception as e:
-            logger.error(f"Force query failed: {str(e)}", exc_info=True)
-            return jsonify({"status": "error", "message": str(e)}), 500
 
     return app
 

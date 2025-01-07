@@ -26,6 +26,7 @@ def query_store() -> None:
         insert_records(rates_db, sgd_base_prices)
         last_query_time = datetime.now(pytz.utc)
         logger.info("Query executed successfully")
+        
     except Exception as e:
         logger.error(f"Query failed: {str(e)}", exc_info=True)
         raise
