@@ -1,3 +1,4 @@
+import os 
 from typing import Dict 
 from threading import Thread
 from flask import Flask, jsonify
@@ -40,4 +41,7 @@ if __name__ == "__main__":
     periodic_query(QUERY_INTERVAL_MINUTES)   
     periodic_delete(rates_db, DELETE_INTERVAL_MINUTES)  
     
-    app.run(debug=False) # Stops parent thread from running that causes 2 runs 
+    # app.run(debug=False) # Stops parent thread from running that causes 2 runs 
+
+    port = int(os.environ.get("PORT", 10000)) 
+    app.run(host="0.0.0.0", port=port, debug=False)
