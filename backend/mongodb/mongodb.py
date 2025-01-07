@@ -2,7 +2,7 @@ import pytz
 from typing import Dict, List 
 from datetime import datetime, timedelta
 from pymongo import MongoClient, ASCENDING
-from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS
+from backend.settings import MONGO_CONNECTION, BASE_TERM_PAIRS, logger
 
 mongo_client = MongoClient(MONGO_CONNECTION)
 rates_db = mongo_client.get_database("SGDX_Rates")
@@ -37,6 +37,7 @@ def insert_records(rates_db: MongoClient, prices: Dict[str, float]) -> None:
             "timestamp": utc_time 
         }
         rates_db[currency].insert_one(record)
+    logger.info("Collections Updated")
 
 def delete_records(rates_db: MongoClient, days: int = 60) -> None:
     """
@@ -50,6 +51,7 @@ def delete_records(rates_db: MongoClient, days: int = 60) -> None:
 
     for collection_name in rates_db.list_collection_names():
         rates_db[collection_name].delete_many({"timestamp": {"$lt": cutoff_time}})
+    logger.info("Records Deleted")
 
 def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Dict[str, Dict[str, float]]:
     """
@@ -65,6 +67,7 @@ def fetch_records(rates_db: MongoClient, currency: List[str], period: int) -> Di
             str(record["timestamp"]): record["rate"] for record in records
         }
     
+    logger.info("Records Fetched")
     return currencies
 
 create_schema(rates_db, BASE_TERM_PAIRS)

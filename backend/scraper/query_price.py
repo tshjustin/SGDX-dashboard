@@ -1,12 +1,9 @@
 import logging 
 import requests 
 from typing import Dict 
-from backend.settings import API_URL, API_KEY, BASE_TERM_PAIRS # python -m scraper.query_price resolves relative imports. Run module name, not module path (with .py)
+from backend.settings import API_URL, API_KEY, BASE_TERM_PAIRS, logger # python -m scraper.query_price resolves relative imports. Run module name, not module path (with .py)
 
 complete_url = f"{API_URL}?api_key={API_KEY}"
-
-logging.basicConfig(level=logging.INFO) 
-logger = logging.getLogger(__name__)
 
 def fetch_rates() -> Dict:
     """

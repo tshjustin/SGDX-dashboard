@@ -8,7 +8,6 @@ def periodic_delete(rates_db: MongoClient, interval: int) -> None:
     schedule.every(interval).minutes.do(lambda: delete_records(rates_db)) # for the sake of argument passing 
 
 def periodic_query(interval: int) -> None:
-    print("Running")
     schedule.every(interval).minutes.do(query_store)
 
 def run_scheduler() -> None:
@@ -23,3 +22,4 @@ def query_store() -> None:
     prices = fetch_rates()
     sgd_base_prices = convert_rates_to_sgd_base(prices)
     insert_records(rates_db, sgd_base_prices) # else we can do as such to pass the arugments in 
+    logger.info("Interval Executed")

@@ -3,8 +3,8 @@ from typing import Dict
 from threading import Thread
 from flask import Flask, jsonify
 from backend.mongodb.mongodb import rates_db, fetch_records
-from backend.scheduler import periodic_query, periodic_delete, run_scheduler 
-from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES
+from backend.scheduler import periodic_query, periodic_delete, run_scheduler
+from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES, logger 
 
 app = Flask(__name__)
 
@@ -37,6 +37,7 @@ def rate_interval(base: str, time: int) -> Dict:
 if __name__ == "__main__":
     scheduler_thread = Thread(target=run_scheduler)  # non-blocking of main app
     scheduler_thread.start()
+    logger.info("Thread Started")
 
     periodic_query(QUERY_INTERVAL_MINUTES)   
     periodic_delete(rates_db, DELETE_INTERVAL_MINUTES)  

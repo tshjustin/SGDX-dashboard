@@ -29,9 +29,3 @@ An exchange rate platform to query about different real time rates relative to S
 
 3. Monitoring / Alerts -> If significant drop is encountered 
 - Possible! Perhaps alert through email / SMS when significant drop
-
-### To-do
-1. Verify Periodic Queries and check if updates to DB are successful ✅
-
-2. Set up endpoints
-Frontend will call the endpoint to query rates when the user clicks on the currency pair that they want to query. For example, if user clicks on "MYRSGD", it fetches rates for MYRSGD, up till the maximum of of 60 days ago.

@@ -6,9 +6,10 @@ load_dotenv(find_dotenv())
 
 # Logger 
 logging.basicConfig(level=logging.INFO) 
+logger = logging.getLogger(__name__)
 
 # Database 
-MONGO_CONNECTION = os.environ.get('MONGO_CONNECTION')
+MONGO_CONNECTION = os.environ.get('MONGO_CONNECTION')()
 
 # External APIs 
 API_URL = os.environ.get('API_URL')
