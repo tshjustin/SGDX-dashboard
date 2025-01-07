@@ -19,7 +19,13 @@ def query_store() -> None:
     """
     Query, convert and store 
     """
-    prices = fetch_rates()
-    sgd_base_prices = convert_rates_to_sgd_base(prices)
-    insert_records(rates_db, sgd_base_prices) # else we can do as such to pass the arugments in 
-    logger.info("Interval Executed")
+    global last_query_time
+    try:
+        prices = fetch_rates()
+        sgd_base_prices = convert_rates_to_sgd_base(prices)
+        insert_records(rates_db, sgd_base_prices)
+        last_query_time = datetime.now(pytz.utc)
+        logger.info("Query executed successfully")
+    except Exception as e:
+        logger.error(f"Query failed: {str(e)}", exc_info=True)
+        raise
