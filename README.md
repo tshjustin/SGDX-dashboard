@@ -6,26 +6,14 @@ An exchange rate platform to query about different real time rates relative to S
 ### Requirements 
 
 #### Functional Requirements
-1. Query rates every hour  ✅
-- OK! 
-- Need to consider DB space. How long are we storing the data for? Need to consider if the free DB that we are using can accomodate so much data.
+Feature | Status | Comments | Response | 
+--- | --- | --- | --- |
+Query rates every hour  | ✅ | Need to consider DB space. How long are we storing the data for? Need to consider if the free DB that we are using can accomodate so much data | Monitoring 
+Query rates every hour  | ✅ | Convert rates to SGD base  | Hard to convert to SGD base. For example if we are scraping USDMYR, and to convert to USDSGD, we need the MYRSGD exchange rate to caculate. But which MYRSGD rate to use? - Not possible to find a suitable rate. | All information from queried rates 
 
-2. Convert rates to SGD base ✅
-- Hard to convert to SGD base. For example if we are scraping USDMYR, and to convert to USDSGD, we need the MYRSGD exchange rate to caculate. But which MYRSGD rate to use? - Not possible to find a suitable rate.
+Visuals to see how rate changes per time, time = {day, {1,2...12} months, years}  | If rates are better compared to the previous week or something then we can highlight the rate green? And highlight the rate red vice-versa| Yes |
+Allows for switch currency, SGD-> XXX, XXX-> SGD   |  | - | - |
+Currency of other bases. Eg: MYR -> USD  |  | - |
 
-3. Visuals to see how rate changes per time, time = {day, {1,2...12} months, years}
-- Possible! If rates are better compared to the previous week or something then we can highlight the rate green? And highlight the rate red vice-versa
-
-4. Allows for switch currency, SGD-> XXX, XXX-> SGD 
-
-5. Currency of other bases. Eg: MYR -> USD 
-
-#### Non Functional Requirements 
-1. Scalability -> More currency from different sources 
-- I think possible? Can incorporate multi-threading.
-
-2. Peformance -> How fast should rates be updated upon query 
-- After we have scraped the rates from the all websites, we can do a query immediately after to query the updated rates and display on the website. 
-
-3. Monitoring / Alerts -> If significant drop is encountered 
-- Possible! Perhaps alert through email / SMS when significant drop
+#### Known Bugs 
+1. Scheduler_status reads False despite it running 
