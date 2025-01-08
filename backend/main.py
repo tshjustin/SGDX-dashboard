@@ -36,30 +36,45 @@ def create_app():
     def status():
         global scheduler_thread, scheduler_start_time, last_query_time
         
+        # Check DB status
         try:
             rates_db.command('ping')
             db_status = "connected"
         except Exception as e:
             db_status = f"error: {str(e)}"
 
-        # Check if we can access the API
-        from backend.scraper.query_price import complete_url
+        # Check rates API status
         import requests
+        from backend.scraper.query_price import complete_url
 
         try:
             response = requests.head(complete_url)
             api_status = "accessible" if response.status_code == 200 else f"error: {response.status_code}"
         except Exception as e:
             api_status = f"error: {str(e)}"
+        
+        # Check scheduler status of worker 0 
+        worker_id = os.environ.get('GUNICORN_WORKER_ID', 'unknown')
 
+        if worker_id == '0':
+            scheduler_status = scheduler_thread.is_alive() if scheduler_thread else False
+            scheduler_start = scheduler_start_time.isoformat() if scheduler_start_time else None
+            last_query = last_query_time.isoformat() if last_query_time else None
+        else:
+            # For non-scheduler workers, defer to worker 0's scheduler
+            scheduler_status = "check worker 0"
+            scheduler_start = "check worker 0"
+            last_query = "check worker 0"
+
+        # status payload 
         return jsonify({
             "service_status": "running",
-            "scheduler_running": scheduler_thread.is_alive() if scheduler_thread else False,
-            "scheduler_start_time": scheduler_start_time.isoformat() if scheduler_start_time else None,
-            "last_query_time": last_query_time.isoformat() if last_query_time else None,
+            "scheduler_running": scheduler_status,
+            "scheduler_start_time": scheduler_start,
+            "last_query_time": last_query,
             "database_status": db_status,
             "api_status": api_status,
-            "worker_id": os.environ.get('GUNICORN_WORKER_ID', 'unknown')
+            "worker_id": worker_id
         })
 
     return app
