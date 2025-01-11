@@ -3,23 +3,28 @@ import {
     Box,
     Drawer, 
     CssBaseline,
-    Toolbar,
     Typography,
     Autocomplete,
-    TextField
+    TextField,
+    Stack
 } from '@mui/material';
 
 const drawerWidth = 300;
-const options = ['EUR', 'JPY', 'MYR', 'THB', 'TWD', 'SGD'];
+const ccyOptions = ['EUR', 'JPY', 'MYR', 'THB', 'TWD', 'SGD'];
+const timeRangeOptions = ['1', '7', '30', '60']
 
 export default function SideBar({ setCcyPair }) {
     const [baseCcy, setBaseCcy] = useState("SGD");
     const [termCcy, setTermCcy] = useState("JPY");
+    const [timeRange, setTimeRange] = useState(7)
 
     useEffect(() => {
         console.log(baseCcy + termCcy);
+        console.log(timeRange);
+
         setCcyPair(baseCcy + termCcy);
-    }, [baseCcy, termCcy, setCcyPair]);
+        setTimeRange(timeRange)
+    }, [baseCcy, termCcy, setCcyPair, timeRange]);
 
     const handleBaseCcyOnChange = (event) => {
         const prevSelectedCcy = baseCcy;
@@ -51,6 +56,13 @@ export default function SideBar({ setCcyPair }) {
         } 
     }
 
+    const handleTimeRangeOnChange = (event) => {
+        if (event.type === "click") {
+            const timeRange = event.target.innerHTML;
+            setTimeRange(timeRange);
+        }   
+    }
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -61,24 +73,24 @@ export default function SideBar({ setCcyPair }) {
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                         boxSizing: 'border-box',
+                        padding: '16px'
                     },
                 }}
                 variant="permanent"
                 anchor="left"
+                role="presentation"
             >
-                <Toolbar>
-                    <Typography variant="h5" noWrap component="div">
-                        SGDX
-                    </Typography>
-                </Toolbar>
-                <Box>
+                <Typography variant="h5">
+                    SGDX Dashboard
+                </Typography>
+                <Stack spacing={1}>
                     <Autocomplete
                         disableClearable
                         autoSelect
                         autoHighlight
                         blurOnSelect
                         autoComplete={false}
-                        options={options}
+                        options={ccyOptions}
                         value={baseCcy}
                         onChange={handleBaseCcyOnChange}
                         renderInput={(params) => (
@@ -97,7 +109,7 @@ export default function SideBar({ setCcyPair }) {
                         autoHighlight
                         blurOnSelect
                         autoComplete={false}
-                        options={options}
+                        options={ccyOptions}
                         value={termCcy}
                         onChange={handleTermCcyOnChange}
                         renderInput={(params) => (
@@ -110,7 +122,26 @@ export default function SideBar({ setCcyPair }) {
                             />
                         )}
                     />
-                </Box>
+                    <Autocomplete 
+                        disableClearable
+                        autoSelect
+                        autoHighlight
+                        blurOnSelect
+                        autoComplete={false}
+                        options={timeRangeOptions}
+                        value={timeRange}
+                        onChange={handleTimeRangeOnChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Time Range (days)"
+                                variant="outlined"
+                                size="medium"
+                                margin="normal"
+                            />
+                        )}
+                    />
+                </Stack>
             </Drawer>
         </Box>
     );
