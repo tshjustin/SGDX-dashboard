@@ -3,6 +3,7 @@ import pytz
 from typing import Dict 
 from threading import Thread
 from datetime import datetime
+from flask_cors import CORS 
 from flask import Flask, jsonify
 from backend.mongodb.mongodb import rates_db, fetch_records
 from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES, logger 
@@ -15,6 +16,15 @@ scheduler_thread = None
 
 def create_app():
     app = Flask(__name__)
+
+    # Allow CORS for all routes 
+    CORS(app, resources={
+        r"/*": { # match anypath of the defined backend endpoints 
+            "origins": "*",  # all domain accepted 
+            "methods": ["GET", "HEAD", "OPTIONS"], 
+            "allow_headers": ["Content-Type"]
+        }
+    })
     
     if os.environ.get('GUNICORN_WORKER_ID', '0') == '0':
         initialize_scheduler()
