@@ -1,53 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
     Box,
     Drawer, 
     CssBaseline,
-    Toolbar,
     Typography,
     Autocomplete,
-    TextField
+    TextField,
+    Stack
 } from '@mui/material';
 
 const drawerWidth = 300;
-const options = ['EUR', 'JPY', 'MYR', 'THB', 'TWD', 'SGD'];
+const ccyOptions = ['JPY', 'MYR', 'THB'];
+const timeRangeOptions = ['1', '7', '30', '60']
 
-export default function SideBar({ setCcyPair }) {
-    const [baseCcy, setBaseCcy] = useState("SGD");
-    const [termCcy, setTermCcy] = useState("JPY");
-
-    useEffect(() => {
-        console.log(baseCcy + termCcy);
-        setCcyPair(baseCcy + termCcy);
-    }, [baseCcy, termCcy, setCcyPair]);
-
-    const handleBaseCcyOnChange = (event) => {
-        const prevSelectedCcy = baseCcy;
-
+export default function SideBar({ baseCcy, setBaseCcy, timeRange, setTimeRange }) {
+    const handleBaseCcyChange = (event) => {
         if (event.type === "click") {
-            const baseCcy = event.target.innerHTML;
-            setBaseCcy(baseCcy);
-
-            if (baseCcy === "SGD") {
-                setTermCcy(prevSelectedCcy);
-            } else {
-                setTermCcy("SGD");
-            } 
+            setBaseCcy(event.target.innerHTML);
         } 
     }
 
-    const handleTermCcyOnChange = (event) => {
-        const prevSelectedCcy = termCcy;
-
+    const handleTimeRangeChange = (event) => {
         if (event.type === "click") {
-            const termCcy = event.target.innerHTML;
-            setTermCcy(termCcy);
-
-            if (termCcy === "SGD") {
-                setBaseCcy(prevSelectedCcy);
-            } else {
-                setBaseCcy("SGD");
-            } 
+            setTimeRange(event.target.innerHTML);
         } 
     }
 
@@ -61,26 +36,26 @@ export default function SideBar({ setCcyPair }) {
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                         boxSizing: 'border-box',
+                        padding: '16px'
                     },
                 }}
                 variant="permanent"
                 anchor="left"
+                role="presentation"
             >
-                <Toolbar>
-                    <Typography variant="h5" noWrap component="div">
-                        SGDX
-                    </Typography>
-                </Toolbar>
-                <Box>
+                <Typography variant="h5">
+                    SGDX Dashboard
+                </Typography>
+                <Stack spacing={1}>
                     <Autocomplete
                         disableClearable
                         autoSelect
                         autoHighlight
                         blurOnSelect
                         autoComplete={false}
-                        options={options}
+                        options={ccyOptions}
                         value={baseCcy}
-                        onChange={handleBaseCcyOnChange}
+                        onChange={handleBaseCcyChange}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -91,26 +66,26 @@ export default function SideBar({ setCcyPair }) {
                             />
                         )}
                     />
-                    <Autocomplete
+                    <Autocomplete 
                         disableClearable
                         autoSelect
                         autoHighlight
                         blurOnSelect
                         autoComplete={false}
-                        options={options}
-                        value={termCcy}
-                        onChange={handleTermCcyOnChange}
+                        options={timeRangeOptions}
+                        value={timeRange}
+                        onChange={handleTimeRangeChange}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Term Currency"
+                                label="Time Range (days)"
                                 variant="outlined"
                                 size="medium"
                                 margin="normal"
                             />
                         )}
                     />
-                </Box>
+                </Stack>
             </Drawer>
         </Box>
     );
