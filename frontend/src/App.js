@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import SideBar from './SideBar';
-import TimelineGraph from './TimelineGraph';
+import SideBar from './components/SideBar';
+import TimelineGraph from './components/TimelineGraph';
+import { fetchTimelineData } from './services/api';
 
 export default function App() {
-    const [ccyPair, setCcyPair] = useState("");
-    const [data, setData] = useState({});
+    const [baseCcy, setBaseCcy] = useState('MYR');  
+    const [timeRange, setTimeRange] = useState('1'); 
+    const [timelineData, setTimelineData] = useState(null); 
 
-    // Every time the ccyPair changes, 
-    // send a request to the backend to retieve the rates for that ccyPair
     useEffect(() => {
-        fetch("https://httpbin.org/anything") // sample backend endpoint
-        .then(response => response.json())
-        .then(data => setData(data))
-    }, [ccyPair]);
+        const getData = async () => {
+          try {
+            const data = await fetchTimelineData(baseCcy, timeRange);
+            setTimelineData(data); 
+          } catch (error) {
+            console.error('Error fetching timeline data', error);
+          }
+        };
+    
+        getData();
+    }, [baseCcy, timeRange]); 
 
     return (
         <>
-            <SideBar setCcyPair={setCcyPair}/>
-		    <TimelineGraph data={data}/>
+            <SideBar
+                baseCcy={baseCcy}
+                setBaseCcy={setBaseCcy}
+                timeRange={timeRange}
+                setTimeRange={setTimeRange}
+            />
+            <TimelineGraph data={timelineData} />
         </>
     );
 }

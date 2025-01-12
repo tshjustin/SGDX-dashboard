@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
     Box,
     Drawer, 
@@ -10,57 +10,20 @@ import {
 } from '@mui/material';
 
 const drawerWidth = 300;
-const ccyOptions = ['EUR', 'JPY', 'MYR', 'THB', 'TWD', 'SGD'];
+const ccyOptions = ['JPY', 'MYR', 'THB'];
 const timeRangeOptions = ['1', '7', '30', '60']
 
-export default function SideBar({ setCcyPair }) {
-    const [baseCcy, setBaseCcy] = useState("SGD");
-    const [termCcy, setTermCcy] = useState("JPY");
-    const [timeRange, setTimeRange] = useState(7)
-
-    useEffect(() => {
-        console.log(baseCcy + termCcy);
-        console.log(timeRange);
-
-        setCcyPair(baseCcy + termCcy);
-        setTimeRange(timeRange)
-    }, [baseCcy, termCcy, setCcyPair, timeRange]);
-
-    const handleBaseCcyOnChange = (event) => {
-        const prevSelectedCcy = baseCcy;
-
+export default function SideBar({ baseCcy, setBaseCcy, timeRange, setTimeRange }) {
+    const handleBaseCcyChange = (event) => {
         if (event.type === "click") {
-            const baseCcy = event.target.innerHTML;
-            setBaseCcy(baseCcy);
-
-            if (baseCcy === "SGD") {
-                setTermCcy(prevSelectedCcy);
-            } else {
-                setTermCcy("SGD");
-            } 
+            setBaseCcy(event.target.innerHTML);
         } 
     }
 
-    const handleTermCcyOnChange = (event) => {
-        const prevSelectedCcy = termCcy;
-
+    const handleTimeRangeChange = (event) => {
         if (event.type === "click") {
-            const termCcy = event.target.innerHTML;
-            setTermCcy(termCcy);
-
-            if (termCcy === "SGD") {
-                setBaseCcy(prevSelectedCcy);
-            } else {
-                setBaseCcy("SGD");
-            } 
+            setTimeRange(event.target.innerHTML);
         } 
-    }
-
-    const handleTimeRangeOnChange = (event) => {
-        if (event.type === "click") {
-            const timeRange = event.target.innerHTML;
-            setTimeRange(timeRange);
-        }   
     }
 
     return (
@@ -92,30 +55,11 @@ export default function SideBar({ setCcyPair }) {
                         autoComplete={false}
                         options={ccyOptions}
                         value={baseCcy}
-                        onChange={handleBaseCcyOnChange}
+                        onChange={handleBaseCcyChange}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 label="Base Currency"
-                                variant="outlined"
-                                size="medium"
-                                margin="normal"
-                            />
-                        )}
-                    />
-                    <Autocomplete
-                        disableClearable
-                        autoSelect
-                        autoHighlight
-                        blurOnSelect
-                        autoComplete={false}
-                        options={ccyOptions}
-                        value={termCcy}
-                        onChange={handleTermCcyOnChange}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Term Currency"
                                 variant="outlined"
                                 size="medium"
                                 margin="normal"
@@ -130,7 +74,7 @@ export default function SideBar({ setCcyPair }) {
                         autoComplete={false}
                         options={timeRangeOptions}
                         value={timeRange}
-                        onChange={handleTimeRangeOnChange}
+                        onChange={handleTimeRangeChange}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
