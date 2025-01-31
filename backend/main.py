@@ -1,13 +1,13 @@
 import os 
 import pytz
-from typing import Dict 
+from typing import Dict, List
 from threading import Thread
 from datetime import datetime
 from flask_cors import CORS 
 from flask import Flask, jsonify
 from backend.mongodb.mongodb import rates_db, fetch_records
-from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES, logger 
 from backend.scheduler import periodic_query, periodic_delete, run_scheduler, query_store
+from backend.settings import QUERY_INTERVAL_MINUTES, DELETE_INTERVAL_MINUTES, logger, BASE_TERM_PAIRS
 
 # Global variables for monitoring
 scheduler_start_time = None
@@ -41,6 +41,10 @@ def create_app():
         period = int(time)
         rates = fetch_records(rates_db, [base], period)
         return jsonify(rates)
+
+    @app.route("/get/terms")
+    def terms() -> List:
+        return BASE_TERM_PAIRS
 
     @app.route("/status")
     def status():
